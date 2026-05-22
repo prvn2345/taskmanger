@@ -6,30 +6,29 @@ const path = require("path");
 const app = express();
 const PORT = 5000;
 
-// Path to the tasks JSON file (acts as our simple database)
+
 const TASKS_FILE = path.join(__dirname, "public", "tasks.json");
 
 app.use(cors({ origin: "http://localhost:3002" }));
 app.use(express.json());
 
-// Helper: read tasks from file
+
 function readTasks() {
   const data = fs.readFileSync(TASKS_FILE, "utf-8");
   return JSON.parse(data);
 }
 
-// Helper: write tasks to file
+
 function writeTasks(tasks) {
   fs.writeFileSync(TASKS_FILE, JSON.stringify(tasks, null, 2));
 }
 
-// GET /api/tasks - fetch all tasks
 app.get("/api/tasks", (req, res) => {
   const tasks = readTasks();
   res.json(tasks);
 });
 
-// POST /api/tasks - add a new task
+
 app.post("/api/tasks", (req, res) => {
   const tasks = readTasks();
   const newTask = {
@@ -45,7 +44,7 @@ app.post("/api/tasks", (req, res) => {
   res.status(201).json(newTask);
 });
 
-// PUT /api/tasks/:id - update a task
+
 app.put("/api/tasks/:id", (req, res) => {
   const tasks = readTasks();
   const id = parseInt(req.params.id);
@@ -60,7 +59,7 @@ app.put("/api/tasks/:id", (req, res) => {
   res.json(tasks[index]);
 });
 
-// DELETE /api/tasks/:id - delete a task
+
 app.delete("/api/tasks/:id", (req, res) => {
   const tasks = readTasks();
   const id = parseInt(req.params.id);
