@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "title": "Prepare Presentation",
+    "description": "Complete the slides for Monday's meeting",
+    "priority": "High",
+    "status": "Pending",
+    "dueDate": "2026-05-28"
+  },
+  {
+    "id": 2,
+    "title": "Buy Groceries",
+    "description": "Milk, Eggs, Bread",
+    "priority": "Low",
+    "status": "Completed",
+    "dueDate": "2026-05-21"
+  }
+]
