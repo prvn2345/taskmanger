@@ -12,8 +12,9 @@ export default function App() {
   const [priorityFilter, setPriorityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
+  
   useEffect(() => {
-    fetch("/tasks.json")
+    fetch("/api/tasks")
       .then((res) => res.json())
       .then((data) => {
         setTasks(data);
@@ -39,26 +40,42 @@ export default function App() {
     setFiltered(result);
   }, [priorityFilter, statusFilter, search, tasks]);
 
+  
   const addTask = (task) => {
-    const newTask = { ...task, id: Date.now() };
-    setTasks([...tasks, newTask]);
+    fetch("/api/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(task),
+    })
+      .then((res) => res.json())
+      .then((newTask) => {
+        setTasks([...tasks, newTask]);
+      });
   };
 
+  
   const updateTask = (updatedTask) => {
-    const updatedList = tasks.map((t) =>
-      t.id === updatedTask.id ? updatedTask : t
-    );
-    setTasks(updatedList);
+    fetch(`/api/tasks/${updatedTask.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedTask),
+    })
+      .then((res) => res.json())
+      .then((saved) => {
+        setTasks(tasks.map((t) => (t.id === saved.id ? saved : t)));
+      });
   };
 
+  
   const deleteTask = (id) => {
-    setTasks(tasks.filter((t) => t.id !== id));
+    fetch(`/api/tasks/${id}`, { method: "DELETE" }).then(() => {
+      setTasks(tasks.filter((t) => t.id !== id));
+    });
   };
 
   return (
     <div className="app-container">
 
-      
       <div className="header">
         <h1>Task Manager</h1>
         <button
@@ -79,7 +96,7 @@ export default function App() {
         setSearch={setSearch}
       />
 
-      
+    
       <div className="task-grid">
         {filtered.map((task) => (
           <TaskCard
@@ -94,7 +111,7 @@ export default function App() {
         ))}
       </div>
 
-    
+      
       {showModal && (
         <TaskFormModal
           close={() => setShowModal(false)}
